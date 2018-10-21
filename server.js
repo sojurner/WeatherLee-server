@@ -6,22 +6,15 @@ const cors = require('cors');
 const { apiKey } = require('./resources/apiKey');
 var port = 3001;
 
-// Configure app to use bodyParser to parse json data
 var app = express();
 app.use(cors());
 var server = require('http').createServer(app);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Test server is working (GET http://localhost:3001/api)
-app.get('/api/', function(req, res) {
-  res.json({ message: 'Hi, welcome to the server api!' });
-});
-
 var url_prefix = `https://api.darksky.net/forecast/${apiKey}/`;
 app.get('/api/darksky', function(req, res) {
   try {
-    // Retrieves location coordinates (latitude and longitude) from client request query
     var coordinates = req.query.latitude + ',' + req.query.longitude;
     var url = url_prefix + coordinates;
     console.log('Fetching ' + url);
