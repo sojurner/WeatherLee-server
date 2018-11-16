@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-require('es6-promise').polyfill();
-require('isomorphic-fetch');
+require('dotenv').config();
+// require('es6-promise').polyfill();
+// require('isomorphic-fetch');
 const cors = require('cors');
-const { apiKey } = require('./resources/apiKey');
-const port = 3001;
+const port = process.env.PORT;
 
 const app = express();
 const server = require('http').createServer(app);
@@ -13,7 +13,9 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const url_prefix = `https://api.darksky.net/forecast/${apiKey}/`;
+const url_prefix = `https://api.darksky.net/forecast/${
+  process.env.DARK_SKY_KEY
+}/`;
 
 app.get('/api/darksky', function(req, res) {
   try {
