@@ -1,21 +1,23 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 const cors = require('cors');
 const { apiKey } = require('./resources/apiKey');
-var port = 3001;
+const port = 3001;
 
-var app = express();
+const app = express();
+const server = require('http').createServer(app);
+
 app.use(cors());
-var server = require('http').createServer(app);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var url_prefix = `https://api.darksky.net/forecast/${apiKey}/`;
+const url_prefix = `https://api.darksky.net/forecast/${apiKey}/`;
+
 app.get('/api/darksky', function(req, res) {
   try {
-    var coordinates = req.query.latitude + ',' + req.query.longitude;
+    const coordinates = `${req.query.latitude},${req.query.longitude}`;
     var url = url_prefix + coordinates;
     console.log('Fetching ' + url);
 
