@@ -13,11 +13,10 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const url_prefix = `https://api.darksky.net/forecast/${
-  process.env.DARK_SKY_KEY
-}/`;
-
 app.get('/api/darksky', function(req, res) {
+  const url_prefix = `https://api.darksky.net/forecast/${
+    process.env.DARK_SKY_KEY
+  }/`;
   try {
     const coordinates = `${req.query.latitude},${req.query.longitude}`;
     var url = url_prefix + coordinates;
@@ -40,6 +39,34 @@ app.get('/api/darksky', function(req, res) {
     res
       .status(500)
       .json({ message: 'Errors occurs requesting Dark Sky API', details: err });
+  }
+});
+
+app.get('/api/pixabay', function(req, res) {
+  const url = `https://pixabay.com/api/?key=${process.env.PIXABAY_KEY}&q=${
+    req.query.query
+  }`;
+  try {
+    console.log('Fetching' + url);
+    fetch(url)
+      .then(response => {
+        if (response.status != 200) {
+          res
+            .status(response.status)
+            .json({ message: 'Bad response from PixaBay server' });
+        }
+        return response.json();
+      })
+      .then(payload => {
+        console.log(payload);
+        res.status(200).json(payload);
+      });
+  } catch (err) {
+    console.log('Error has occured requesting Pixabay API', err);
+    res.status(500).json({
+      message: 'Error has occured requesting Pixabay API',
+      details: err
+    });
   }
 });
 
