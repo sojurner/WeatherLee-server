@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-// require('es6-promise').polyfill();
-// require('isomorphic-fetch');
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
 const cors = require('cors');
-const port = process.env.PORT;
+const port = process.env.PORT || 3001;
 
 const app = express();
 const server = require('http').createServer(app);
