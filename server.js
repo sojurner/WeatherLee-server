@@ -35,7 +35,6 @@ app.get('/api/darksky', function(req, res) {
         res.status(200).json(payload);
       });
   } catch (err) {
-    console.log('Errors occurs requesting Dark Sky API', err);
     res
       .status(500)
       .json({ message: 'Errors occurs requesting Dark Sky API', details: err });
@@ -58,11 +57,9 @@ app.get('/api/pixabay', function(req, res) {
         return response.json();
       })
       .then(payload => {
-        console.log(payload);
         res.status(200).json(payload);
       });
   } catch (err) {
-    console.log('Error has occured requesting Pixabay API', err);
     res.status(500).json({
       message: 'Error has occured requesting Pixabay API',
       details: err
