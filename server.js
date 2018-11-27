@@ -44,7 +44,7 @@ app.get('/api/darksky', function(req, res) {
 app.get('/api/pixabay', function(req, res) {
   const url = `https://pixabay.com/api/?key=${process.env.PIXABAY_KEY}&q=${
     req.query.query
-  }&category=backgrounds`;
+  }&category=places`;
   try {
     console.log('Fetching' + url);
     fetch(url)
