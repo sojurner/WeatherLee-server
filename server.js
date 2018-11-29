@@ -14,14 +14,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.get('/api/darksky', function(req, res) {
+  const { latitude, longitude } = req.query;
   const url_prefix = `https://api.darksky.net/forecast/${
     process.env.DARK_SKY_KEY
   }/`;
-  try {
-    const coordinates = `${req.query.latitude},${req.query.longitude}`;
-    var url = url_prefix + coordinates;
-    console.log('Fetching ' + url);
 
+  try {
+    const coordinates = `${latitude},${longitude}`;
+    var url = url_prefix + coordinates;
     fetch(url)
       .then(function(response) {
         if (response.status != 200) {
@@ -42,11 +42,11 @@ app.get('/api/darksky', function(req, res) {
 });
 
 app.get('/api/pixabay', function(req, res) {
-  const url = `https://pixabay.com/api/?key=${process.env.PIXABAY_KEY}&q=${
-    req.query.query
-  }&category=nature`;
+  const { q, category } = req.query;
+  const url = `https://pixabay.com/api/?key=${
+    process.env.PIXABAY_KEY
+  }&q=${q}&category=${category}`;
   try {
-    console.log('Fetching' + url);
     fetch(url)
       .then(response => {
         if (response.status != 200) {
@@ -62,6 +62,32 @@ app.get('/api/pixabay', function(req, res) {
   } catch (err) {
     res.status(500).json({
       message: 'Error has occured requesting Pixabay API',
+      details: err
+    });
+  }
+});
+
+app.get('/api/giphy', function(req, res) {
+  const { q } = req.query;
+  const url = `https://api.giphy.com/v1/gifs/search?q=${q}&api_key=${
+    process.env.GIPHY_KEY
+  }&limit=200`;
+  try {
+    fetch(url)
+      .then(response => {
+        if (response.status != 200) {
+          res
+            .status(response.status)
+            .json({ message: 'Bad response from Giphy server' });
+        }
+        return response.json();
+      })
+      .then(payload => {
+        res.status(200).json(payload);
+      });
+  } catch (err) {
+    res.status(500).json({
+      message: 'Error has occurred requesting Giphy API',
       details: err
     });
   }
