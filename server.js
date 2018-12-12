@@ -45,7 +45,7 @@ app.get('/api/pixabay', function(req, res) {
   const { q, category } = req.query;
   const url = `https://pixabay.com/api/?key=${
     process.env.PIXABAY_KEY
-  }&q=${q}&category=${category}`;
+  }&q=${q}&category=${category}&editors_choice=true`;
   try {
     fetch(url)
       .then(response => {
