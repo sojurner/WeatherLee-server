@@ -93,5 +93,52 @@ app.get('/api/giphy', function(req, res) {
   }
 });
 
+app.get('/api/news', function(req, res) {
+  const { category, q } = req.query;
+  let url;
+  if (q && category) {
+    url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${
+      process.env.NEWS_KEY
+    }&category=${category}&q=${q}`;
+  }
+  if (!q && category) {
+    url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${
+      process.env.NEWS_KEY
+    }&category=${category}`;
+  }
+
+  if (!category && q) {
+    url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${
+      process.env.NEWS_KEY
+    }&q=${q}`;
+  }
+
+  if (!category && !q) {
+    url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${
+      process.env.NEWS_KEY
+    }`;
+  }
+
+  try {
+    fetch(url)
+      .then(response => {
+        if (response.status !== 200) {
+          res
+            .status(response.status)
+            .json({ message: 'Bad response from Giphy server' });
+        }
+        return response.json();
+      })
+      .then(payload => {
+        res.status(200).json(payload);
+      });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error has occurred requesting News API',
+      details: err
+    });
+  }
+});
+
 server.listen(port);
 console.log('Server is listening on port ' + port);
