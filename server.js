@@ -42,12 +42,16 @@ app.get('/api/darksky', function(req, res) {
 });
 
 app.get('/api/pixabay', function(req, res) {
-  const { q, category } = req.query;
-  const url = `https://pixabay.com/api/?key=${
-    process.env.PIXABAY_KEY
-  }&q=${q}&category=${category}`;
+  const url = `https://pixabay.com/api/?key=${process.env.PIXABAY_KEY}`;
+
+  const interpolateQueries = (url, queries) =>
+    Object.keys(queries).reduce((queriedUrl, param) => {
+      queriedUrl = `${queriedUrl}&${param}=${queries[param]}`;
+      return queriedUrl;
+    }, url);
+
   try {
-    fetch(url)
+    fetch(interpolateQueries(url, req.query))
       .then(response => {
         if (response.status != 200) {
           res
